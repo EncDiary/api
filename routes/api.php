@@ -17,11 +17,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('book', 'Book\BookController@book');
-Route::get('book/{id}', 'Book\BookController@bookById');
+Route::post('book/{id}', 'Book\BookController@bookLogin');
+Route::post('book', 'Book\BookController@bookCreate');
+Route::get('book/{title}', 'Book\BookController@bookByTitle');
+Route::post('book/changePassword/{book_id}', 'Book\BookController@bookChangePassword');
 
-Route::post('book', 'Book\BookController@bookSave');
-
-Route::put('book/{id}', 'Book\BookController@bookEdit');
-
-Route::delete('book/{id}', 'Book\BookController@bookDelete');
+Route::post('note', 'Note\NoteController@note');
+Route::post('note/create', 'Note\NoteController@noteCreate');
+Route::post('note/edit/{id}', 'Note\NoteController@noteEdit');
+Route::post('note/delete/{id}', 'Note\NoteController@noteDelete');

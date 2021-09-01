@@ -13,4 +13,6 @@ class BookModel extends Model
         'title',
         'password_hash'
     ];
+
+    public $timestamps = false; 
 }
