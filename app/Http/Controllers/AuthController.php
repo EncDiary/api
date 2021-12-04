@@ -18,6 +18,7 @@ class AuthController extends BaseController
     return $token;
   }
 
+
   public static function checkToken($token)
   {
     try {
@@ -27,6 +28,7 @@ class AuthController extends BaseController
       return false;
     }
   }
+
 
   public static function createOneTimeKey($user) {
     $one_time_key = bin2hex(openssl_random_pseudo_bytes(32));
@@ -40,6 +42,7 @@ class AuthController extends BaseController
 
     return base64_encode($ciphertext);
   }
+
 
   public static function checkOneTimeKey($user, $plaintext) {
     if ($user->one_time_key_expiration_datetime < time()) {
@@ -63,6 +66,7 @@ class AuthController extends BaseController
     return ['status' => true];
   }
 
+  
   public static function checkIsPublicKeyValid($public_key_text) {
     $public_key = openssl_get_publickey($public_key_text);
     return (bool) $public_key;
