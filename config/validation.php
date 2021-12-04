@@ -1,18 +1,26 @@
 <?php
 
+$hex_regex = 'regex:/^[a-f0-9]*$/i';
+$base64_regex = 'regex:/^[a-z0-9+=\/]*$/i';
+
 return [
   'user' => [
     'username' => [
       'required',
+      'string',
       'regex:/^([a-z][a-z0-9_]{3,30}[a-z0-9]|demo)$/i'
     ],
     'public_key' => [
       'required',
-      'between:110,500'
+      'between:110,500',
+      'string',
+      'regex:/^[a-z0-9+-=\/ \n\r]*$/i'
     ],
     'plaintext' => [
       'required',
-      'size:64'
+      'size:64',
+      'string',
+      $hex_regex
     ]
   ],
   
@@ -30,17 +38,20 @@ return [
     'ciphertext' => [
       'required',
       'string',
-      'between:1,10000000'
+      'between:1,10000000',
+      $base64_regex
     ],
     'iv' => [
       'required',
       'string',
-      'size:32'
+      'size:32',
+      $hex_regex
     ],
     'salt' => [
       'required',
       'string',
-      'between:128,2048'
+      'between:128,2048',
+      $hex_regex
     ]
   ]
 ];
