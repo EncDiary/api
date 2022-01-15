@@ -16,11 +16,15 @@ return [
       'string',
       'regex:/^[a-z0-9+-=\/ \n\r]*$/i'
     ],
-    'plaintext' => [
+    'signature' => [
       'required',
-      'size:64',
       'string',
-      $hex_regex
+      $base64_regex
+    ],
+    'password' => [
+      'required',
+      'string',
+      'between:5,1000'
     ]
   ],
   

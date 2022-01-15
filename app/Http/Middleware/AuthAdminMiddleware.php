@@ -5,9 +5,8 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
-use App\Models\User;
 
-class AuthMiddleware
+class AuthAdminMiddleware
 {
 	public function handle(Request $request, Closure $next)
 	{
@@ -15,15 +14,9 @@ class AuthMiddleware
 		if (!$token)
 			return config('response.unauthorized');
 
-		$decodedToken = AuthController::decodeToken($token, 'user');
+		$decodedToken = AuthController::decodeToken($request->bearerToken(), 'admin');
 		if (!$decodedToken)
 			return config('response.unauthorized');
-
-		$user = User::find($decodedToken->user_id);
-		if (!$user)
-			return config('response.unauthorized');
-
-		$request->request->add(['user' => $user]);
 
 		return $next($request);
 	}

@@ -14,12 +14,16 @@ class UserController extends BaseController
       'public_key' => config('validation.user.public_key')
     ]);
 
-    $isPublicKeyValid = AuthController::checkIsPublicKeyValid($request->input('public_key'));
-    if (!$isPublicKeyValid) return config('response.publicKeyIsInvalid');
+    $isPublicKeyValid = AuthController::checkIsPublicKeyValid(
+      $request->input('public_key')
+    );
+    if (!$isPublicKeyValid)
+      return config('response.publicKeyIsInvalid');
 
     $username = strtolower($request->input('username'));
     $user = User::where('username', $username)->first();
-    if ($user) return config('response.userAlreadyExist');
+    if ($user)
+      return config('response.userAlreadyExist');
 
     $user = new User;
     $user->username = $username;
@@ -30,43 +34,48 @@ class UserController extends BaseController
   }
 
 
-  public function requestOneTimeKey(Request $request) {
+  public function requestMessage(Request $request) {
     $this->validate($request, [
       'username' => config('validation.user.username')
     ]);
 
     $username = strtolower($request->input('username'));
     $user = User::where('username', $username)->first();
-    if (!$user) return config('response.wrongLoginData');
+    if (!$user)
+      return config('response.wrongLoginData');
 
-    $ciphertext = AuthController::createOneTimeKey($user);
+    $ciphertext = AuthController::createMessage($user);
 
-    return response(['ciphertext' => $ciphertext]);
+    return response(['message' => $ciphertext]);
   }
   
 
   public function auth(Request $request) {
     $this->validate($request, [
       'username' => config('validation.user.username'),
-      'plaintext' => config('validation.user.plaintext')
+      'signature' => config('validation.user.signature')
     ]);
 
     $user = User::where('username', $request->input('username'))->first();
-    if (!$user) return config('response.wrongLoginData');
+    if (!$user)
+      return config('response.wrongLoginData');
 
-    $result = AuthController::checkOneTimeKey($user, $request->input('plaintext'));
-    if (!$result['status']) return $result['response'];
+    $authResult = AuthController::authUser(
+      $user,
+      $request->input('signature')
+    );
+    if (!$authResult['status'])
+      return $authResult['response'];
 
-    $token = AuthController::createToken($user->id);
-    return response(['token' => $token]);
+    return response(['token' => $authResult['token']]);
   }
 
   
   public function deleteAccount(Request $request) {
     $user = $request->input('user');
-    if ($user->username === 'demo') return config('response.thisIsDemo');
+    if ($user->username === 'demo')
+      return config('response.thisIsDemo');
 
-    $notes = $user->notes()->delete();
     $user->delete();
     return response(null, 204);
   }

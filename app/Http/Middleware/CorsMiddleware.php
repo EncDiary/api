@@ -11,7 +11,7 @@ class CorsMiddleware
 	{
 		$headers = [
 			'Access-Control-Allow-Origin'      => env('FRONTEND_APP_URL'),
-			'Access-Control-Allow-Methods'     => 'POST, GET, OPTIONS, PUT, DELETE',
+			'Access-Control-Allow-Methods'     => 'GET, POST, PUT, DELETE, OPTIONS',
 			'Access-Control-Allow-Credentials' => 'true',
 			'Access-Control-Max-Age'           => '86400',
 			'Access-Control-Allow-Headers'     => 'Content-Type, Authorization, X-Requested-With'

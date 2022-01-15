@@ -11,10 +11,18 @@ class User extends ModelUuid
 	];
 
 	protected $hidden = [
-		'one_time_key', 'one_time_key_expiration_datetime', 'public_key'
+		'message', 'message_exp', 'public_key'
 	];
 
 	public function notes() {
 		return $this->hasMany(Note::class);
+	}
+
+	public static function boot() {
+		parent::boot();
+
+		static::deleting(function($user) {
+			$user->notes()->delete();
+		});
 	}
 }

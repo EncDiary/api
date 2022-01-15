@@ -4,37 +4,14 @@ namespace App\Http\Controllers;
 
 use Laravel\Lumen\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
+use App\Models\User;
 
-class NoteController extends BaseController
+class DemoNoteController extends BaseController
 {
-  public function getNotes(Request $request) {
-    $this->validate($request, [
-      'limit' => config('validation.note.limit'),
-      'offset' => config('validation.note.offset')
-    ]);
-
+  public function getDemoNotes(Request $request) {
     $user = $request->input('user');
 
     $notes = $user->notes()
-      ->limit($request->input('limit') + 1)
-      ->offset($request->input('offset'))
-      ->orderByDesc('datetime')
-      ->get();
-
-    $notes_is_over = count($notes) !== $request->input('limit') + 1;
-
-    return [
-      'notes' => $notes,
-      'notes_is_over' => $notes_is_over
-    ];
-  }
-
-
-  public function getTodayNotes(Request $request) {
-    $user = $request->input('user');
-
-    $notes = $user->notes()
-      ->whereBetween('datetime', [time() - 60 * 60 * 24, time()])
       ->orderByDesc('datetime')
       ->get();
 
@@ -42,18 +19,16 @@ class NoteController extends BaseController
   }
 
 
-  public function createNote(Request $request) {
+  public function createDemoNote(Request $request) {
     $this->validate($request, [
       'ciphertext' => config('validation.note.ciphertext'),
       'iv' => config('validation.note.iv'),
       'salt' => config('validation.note.salt')
     ]);
-    $user = $request->input('user');
-    if ($user->username === 'demo')
-      return response(['id' => time(), 'datetime' => time()], 201);
 
-    $note = $user->notes()
-      ->create([
+    $user = $request->input('user');
+
+    $note = $user->notes()->create([
         'ciphertext' => $request->input('ciphertext'),
         'iv' => $request->input('iv'),
         'salt' => $request->input('salt'),
@@ -64,15 +39,14 @@ class NoteController extends BaseController
   }
 
 
-  public function editNote(Request $request, $note_id) {
+  public function editDemoNote(Request $request, $note_id) {
     $this->validate($request, [
       'ciphertext' => config('validation.note.ciphertext'),
       'iv' => config('validation.note.iv'),
       'salt' => config('validation.note.salt')
     ]);
+    
     $user = $request->input('user');
-    if ($user->username === 'demo')
-      return response(null, 204);
 
     $note = $user->notes()->find($note_id);
     if (!$note)
@@ -88,10 +62,8 @@ class NoteController extends BaseController
   }
 
 
-  public function deleteNote(Request $request, $note_id) {
+  public function deleteDemoNote(Request $request, $note_id) {
     $user = $request->input('user');
-    if ($user->username === 'demo')
-      return response(null, 204);
 
     $note = $user->notes()->find($note_id);
     if (!$note)
