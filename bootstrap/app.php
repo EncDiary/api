@@ -35,10 +35,9 @@ $app->middleware([
 ]);
 
 $app->routeMiddleware([
-    'auth.user' => App\Http\Middleware\AuthMiddleware::class,
+    'auth.user' => App\Http\Middleware\AuthUserMiddleware::class,
     'auth.admin' => App\Http\Middleware\AuthAdminMiddleware::class,
     'demo' => App\Http\Middleware\DemoMiddleware::class,
-    'admin.enabled' => App\Http\Middleware\AdminEnabledMiddleware::class
 ]);
 
 

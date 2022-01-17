@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use App\Models\User;
 
-class AuthMiddleware
+class AuthUserMiddleware
 {
 	public function handle(Request $request, Closure $next)
 	{
@@ -15,7 +15,7 @@ class AuthMiddleware
 		if (!$token)
 			return config('response.unauthorized');
 
-		$decodedToken = AuthController::decodeToken($token, 'user');
+		$decodedToken = AuthController::decodeToken($token);
 		if (!$decodedToken)
 			return config('response.unauthorized');
 

@@ -10,4 +10,5 @@ return [
   'thisIsDemo' => response(['message' => 'В демоверсии нельзя произвести это действие'], 400),
   'adminPanelDisable' => response(['message' => 'Админ панель отключена'], 400),
   'demoUserNotFound' => response(['message' => 'Демо пользователь еще не создан'], 400),
+  'forbidden' => response(['message' => 'Нет прав доступа'], 403),
 ];

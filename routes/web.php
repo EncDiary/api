@@ -22,9 +22,8 @@ $router->group(['middleware' => 'auth.user'], function () use ($router) {
 });
 
 
-$router->group(['prefix' => 'admin', 'middleware' => 'admin.enabled'], function () use ($router) {
-	$router->post('auth', 'AdminController@auth');
-	$router->group(['middleware' => ['auth.admin', 'demo'], 'prefix' => 'demo'], function () use ($router) {
+$router->group(['prefix' => 'admin', 'middleware' => 'auth.admin'], function () use ($router) {
+	$router->group(['middleware' => 'demo', 'prefix' => 'demo'], function () use ($router) {
 		$router->get('notes', 'DemoNoteController@getDemoNotes');
 		$router->post('note', 'DemoNoteController@createDemoNote');
 		$router->put('note/{note_id}', 'DemoNoteController@editDemoNote');

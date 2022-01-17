@@ -14,7 +14,7 @@ class UserController extends BaseController
       'public_key' => config('validation.user.public_key')
     ]);
 
-    $isPublicKeyValid = AuthController::checkIsPublicKeyValid(
+    $isPublicKeyValid = AuthController::checkIsPubKeyValid(
       $request->input('public_key')
     );
     if (!$isPublicKeyValid)
@@ -36,13 +36,16 @@ class UserController extends BaseController
 
   public function requestMessage(Request $request) {
     $this->validate($request, [
-      'username' => config('validation.user.username')
+      'username' => config('validation.user.username'),
+      'is_admin' => config('validation.user.is_admin')
     ]);
 
     $username = strtolower($request->input('username'));
     $user = User::where('username', $username)->first();
     if (!$user)
       return config('response.wrongLoginData');
+    if (!$user->is_admin && $request->input('is_admin'))
+      return config('response.forbidden');
 
     $ciphertext = AuthController::createMessage($user);
 
@@ -53,16 +56,20 @@ class UserController extends BaseController
   public function auth(Request $request) {
     $this->validate($request, [
       'username' => config('validation.user.username'),
-      'signature' => config('validation.user.signature')
+      'signature' => config('validation.user.signature'),
+      'is_admin' => config('validation.user.is_admin')
     ]);
 
     $user = User::where('username', $request->input('username'))->first();
     if (!$user)
       return config('response.wrongLoginData');
+    if (!$user->is_admin && (bool)$request->input('is_admin'))
+      return config('response.forbidden');
 
-    $authResult = AuthController::authUser(
+    $authResult = AuthController::auth(
       $user,
-      $request->input('signature')
+      $request->input('signature'),
+      (bool)$request->input('is_admin')
     );
     if (!$authResult['status'])
       return $authResult['response'];
