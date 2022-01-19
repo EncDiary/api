@@ -11,7 +11,7 @@ class User extends ModelUuid
 	];
 
 	protected $hidden = [
-		'message', 'message_exp', 'public_key', 'is_admin'
+		'message', 'message_exp', 'public_key', 'is_admin', 'time_added'
 	];
 
 	public function notes() {

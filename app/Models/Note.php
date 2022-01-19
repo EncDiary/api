@@ -11,7 +11,7 @@ class Note extends ModelUuid
   ];
   
   protected $hidden = [
-    'user_id'
+    'user_id', 'time_added'
   ];
   
   public function user() {

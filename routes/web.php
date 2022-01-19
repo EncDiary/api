@@ -29,4 +29,8 @@ $router->group(['prefix' => 'admin', 'middleware' => 'auth.admin'], function () 
 		$router->put('note/{note_id}', 'DemoNoteController@editDemoNote');
 		$router->delete('note/{note_id}', 'DemoNoteController@deleteDemoNote');
 	});
+	$router->group(['prefix' => 'stats'], function () use ($router) {
+		$router->get('month', 'StatisticController@getStatsMonth');
+		$router->get('year', 'StatisticController@getStatsYear');
+	});
 });
