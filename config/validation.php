@@ -27,7 +27,6 @@ return [
       'between:5,1000'
     ],
     'is_admin' => [
-      'required',
       'boolean'
     ],
   ],
