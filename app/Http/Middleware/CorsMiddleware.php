@@ -16,10 +16,12 @@ class CorsMiddleware
 			'Access-Control-Allow-Headers'     => 'Content-Type, Authorization, X-Requested-With'
 		];
 
-		$http_origin = $_SERVER['HTTP_ORIGIN'];
-		$allowed_origins = explode(', ', env('FRONTEND_APP_URL'));
-		if (in_array($http_origin, $allowed_origins)) {
-			$headers['Access-Control-Allow-Origin'] = $http_origin;
+		if (isset($_SERVER['HTTP_ORIGIN'])) {
+			$http_origin = $_SERVER['HTTP_ORIGIN'];
+			$allowed_origins = explode(', ', env('FRONTEND_APP_URL'));
+			if (in_array($http_origin, $allowed_origins)) {
+				$headers['Access-Control-Allow-Origin'] = $http_origin;
+			}
 		}
 
 		if ($request->isMethod('OPTIONS')) {

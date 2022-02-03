@@ -44,9 +44,17 @@ class AuthController extends BaseController
     return (bool) $public_key;
   }
 
+  
+  private static function clearMessage($user) {
+    $user->message = null;
+    $user->message_exp = null;
+    $user->save();
+  }
+
 
   public static function auth($user, $signature, $is_admin) {
-    if ($user->message_exp < time()) {
+    if (is_null($user->message_exp) || $user->message_exp < time()) {
+      self::clearMessage($user);
       return [
         'status' => false,
         'response' => config('response.messageExpired')
@@ -66,9 +74,7 @@ class AuthController extends BaseController
       ];
     }
 
-    $user->message = null;
-    $user->message_exp = null;
-    $user->save();
+    self::clearMessage($user);
 
     $token = self::createToken(15 * 60, $is_admin, ['user_id' => $user->id]);
     return ['status' => true, 'token' => $token];
