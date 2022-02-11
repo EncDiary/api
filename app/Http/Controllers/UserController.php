@@ -11,7 +11,8 @@ class UserController extends BaseController
   public function register(Request $request) {
     $this->validate($request, [
       'username' => config('validation.user.username'),
-      'public_key' => config('validation.user.public_key')
+      'public_key' => config('validation.user.public_key'),
+      'salt' => config('validation.note.salt')
     ]);
 
     $isPublicKeyValid = AuthController::checkIsPubKeyValid(
@@ -28,6 +29,7 @@ class UserController extends BaseController
     $user = new User;
     $user->username = $username;
     $user->public_key = $request->input('public_key');
+    $user->salt = $request->input('salt');
     $user->save();
     
     return response(null, 201);
@@ -74,7 +76,10 @@ class UserController extends BaseController
     if (!$authResult['status'])
       return $authResult['response'];
 
-    return response(['token' => $authResult['token']]);
+    return response([
+      'token' => $authResult['token'],
+      'salt' => $user->salt
+    ]);
   }
 
   

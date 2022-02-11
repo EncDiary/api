@@ -21,11 +21,6 @@ return [
       'string',
       $base64_regex
     ],
-    'password' => [
-      'required',
-      'string',
-      'between:5,1000'
-    ],
     'is_admin' => [
       'boolean'
     ],
@@ -57,7 +52,7 @@ return [
     'salt' => [
       'required',
       'string',
-      'between:128,2048',
+      'between:16,256',
       $hex_regex
     ]
   ]

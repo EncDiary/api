@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class User extends ModelUuid
 {
 	protected $guarded = [
-		'username'
+		'username', 'salt'
 	];
 
 	protected $hidden = [
